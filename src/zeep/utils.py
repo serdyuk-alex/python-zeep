@@ -86,3 +86,11 @@ def get_media_type(value):
     """Parse a HTTP content-type header and return the media-type"""
     main_value, parameters = cgi.parse_header(value)
     return main_value.lower()
+
+
+def unique_op_name(name, ops_dict):
+    if name not in ops_dict:
+        return name
+    for i in range(1, 100):
+        if '{0}_{1}'.format(name, i) not in ops_dict:
+            return f'{name}_{i}'

@@ -6,7 +6,7 @@ from requests_toolbelt.multipart.decoder import MultipartDecoder
 from zeep import ns, plugins, wsa
 from zeep.exceptions import Fault, TransportError, XMLSyntaxError
 from zeep.loader import parse_xml
-from zeep.utils import as_qname, get_media_type, qname_attr
+from zeep.utils import as_qname, get_media_type, qname_attr, unique_op_name
 from zeep.wsdl.attachments import MessagePack
 from zeep.wsdl.definitions import Binding, Operation
 from zeep.wsdl.messages import DocumentMessage, RpcMessage
@@ -264,6 +264,7 @@ class SoapBinding(Binding):
         obj = cls(definitions.wsdl, name, port_name, transport, default_style)
         for node in xmlelement.findall("wsdl:operation", namespaces=cls.nsmap):
             operation = SoapOperation.parse(definitions, node, obj, nsmap=cls.nsmap)
+            operation.name = unique_op_name(operation.name, obj._operations)
             obj._operation_add(operation)
         return obj
 

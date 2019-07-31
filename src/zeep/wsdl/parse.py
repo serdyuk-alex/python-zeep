@@ -6,7 +6,7 @@
 from lxml import etree
 
 from zeep.exceptions import IncompleteMessage, LookupError, NamespaceError
-from zeep.utils import qname_attr
+from zeep.utils import qname_attr, unique_op_name
 from zeep.wsdl import definitions
 
 NSMAP = {
@@ -152,7 +152,7 @@ def parse_port_type(wsdl, xmlelement):
     for elm in xmlelement.findall("wsdl:operation", namespaces=NSMAP):
         operation = parse_abstract_operation(wsdl, elm)
         if operation:
-            operations[operation.name] = operation
+            operations[unique_op_name(operation.name, operations)] = operation
     return definitions.PortType(name, operations)
 
 
